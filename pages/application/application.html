@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gameathon | Dashboard</title>
+  <script>
+    // Function to get cookie value by its name
+    function getCookie(name) {
+        let cookieArr = document.cookie.split(";");
+
+        for(let i = 0; i < cookieArr.length; i++) {
+            let cookiePair = cookieArr[i].split("=");
+
+            // Remove leading spaces and match cookie name
+            if(name == cookiePair[0].trim()) {
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
+
+        // Return null if not found
+        return null;
+    }
+
+    // When the page loads, check if the 'user_name' cookie exists and display it
+    window.onload = function() {
+        let userName = getCookie("user_name");  // Get the cookie value
+        let userNameDisplay = document.getElementById('userNameDisplay');  // Get the <a> element
+
+        if (userName) {
+            // Set the cookie value as the text of the <a> tag
+            userNameDisplay.textContent = userName;
+        } else {
+            // Set a default value if the cookie is not found
+            userNameDisplay.textContent = "Guest";
+        }
+    };
+  </script>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="../../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="../../plugins/jqvmap/jqvmap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="../../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
+  <!-- summernote -->
+  <link rel="stylesheet" href="../../plugins/summernote/summernote-bs4.min.css">
+
+  <style>
+     .form-container {
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(92, 99, 105, .2);
+            border-radius: 8px;
+            background-color: white;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        .form-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-note {
+            font-size: 16px;
+            color: red;
+            margin-bottom: 20px;
+        }
+
+        .member-container, .file-container, .transaction-container {
+            background-color: white; /* Light grey background */
+            border-radius: 8px; /* Curved edges */
+            padding: 20px; /* Inner padding */
+            margin-bottom: 20px; /* Gap between containers */
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+        }
+
+        
+
+        .input-container {
+            position: relative;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .input {
+            width: 100%;
+            height: 50px;
+            padding: 14px;
+            font-size: 16px;
+            border: 1px solid #DADCE0;
+            border-radius: 4px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .input:focus {
+            border-color: #000;
+        }
+
+        .label {
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            transition: 0.3s;
+            transform: translateY(-50%);
+            background: white;
+            padding: 0 5px;
+            font-size: 16px;
+            color: #aaa;
+        }
+
+        .input:focus + .label,
+        .input:not(:placeholder-shown) + .label {
+            top: -10px;
+            left: 14px;
+            transform: translateY(0);
+            font-size: 14px;
+            color: #000;
+        }
+
+        textarea.input {
+            height: 100px;
+            padding: 14px;
+        }
+
+        select.input {
+            height: 50px;
+            padding: 0 14px;
+        }
+
+        .btn-danger, .btn-success {
+            font-size: 16px;
+        }
+
+        .form-row {
+            margin-bottom: 20px;
+        }
+
+        .phone-group {
+            display: flex;
+            width: 100%;
+            position: relative;
+        }
+
+        .phone-prefix {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+            background-color: white;
+            border: 1px solid #DADCE0;
+            border-radius: 4px 0 0 4px;
+            width: 85px; /* Adjust width for the prefix dropdown */
+        }
+
+        .input-phone {
+            border-radius: 0 4px 4px 0;
+            flex-grow: 1;
+            text-transform: none; /* To prevent uppercase transformation */
+            width: calc(100% - 85px); /* Adjust width to be less than the container */
+            padding-left: 14px; /* Ensure the input text starts from the left */
+            text-align: left;
+            position: relative;
+            z-index: 1;
+        }
+
+        .phone-group .label {
+            position: absolute;
+            top: 50%;
+            left: 86px; /* Adjust left to move label further left */
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #aaa;
+            pointer-events: none;
+            background-color: white;
+            padding: 0 5px;
+            z-index: 2;
+        }
+
+           /* Dynamically adjust based on the selected flag */
+           .prefix-select[data-selected="in"] { background-image: url('https://flagcdn.com/w20/in.png'); }
+        .prefix-select[data-selected="us"] { background-image: url('https://flagcdn.com/w20/us.png'); }
+        .prefix-select[data-selected="gb"] { background-image: url('https://flagcdn.com/w20/gb.png'); }
+        .prefix-select[data-selected="jp"] { background-image: url('https://flagcdn.com/w20/jp.png'); }
+        .prefix-select[data-selected="de"] { background-image: url('https://flagcdn.com/w20/de.png'); }
+        .prefix-select[data-selected="fr"] { background-image: url('https://flagcdn.com/w20/fr.png'); }
+        .prefix-select[data-selected="au"] { background-image: url('https://flagcdn.com/w20/au.png'); }
+        .prefix-select[data-selected="cn"] { background-image: url('https://flagcdn.com/w20/cn.png'); }
+        .prefix-select[data-selected="ru"] { background-image: url('https://flagcdn.com/w20/ru.png'); }
+        .prefix-select[data-selected="br"] { background-image: url('https://flagcdn.com/w20/br.png'); }
+        .prefix-select[data-selected="it"] { background-image: url('https://flagcdn.com/w20/it.png'); }
+        .prefix-select[data-selected="es"] { background-image: url('https://flagcdn.com/w20/es.png'); }
+        .prefix-select[data-selected="id"] { background-image: url('https://flagcdn.com/w20/id.png'); }
+        .prefix-select[data-selected="ph"] { background-image: url('https://flagcdn.com/w20/ph.png'); }
+        .prefix-select[data-selected="nl"] { background-image: url('https://flagcdn.com/w20/nl.png'); }
+        .prefix-select[data-selected="za"] { background-image: url('https://flagcdn.com/w20/za.png'); }
+        .prefix-select[data-selected="tr"] { background-image: url('https://flagcdn.com/w20/tr.png'); }
+        .prefix-select[data-selected="th"] { background-image: url('https://flagcdn.com/w20/th.png'); }
+        .prefix-select[data-selected="sa"] { background-image: url('https://flagcdn.com/w20/sa.png'); }
+        .prefix-select[data-selected="ae"] { background-image: url('https://flagcdn.com/w20/ae.png'); }
+        .prefix-select[data-selected="bd"] { background-image: url('https://flagcdn.com/w20/bd.png'); }
+        .prefix-select[data-selected="lk"] { background-image: url('https://flagcdn.com/w20/lk.png'); }
+        .prefix-select[data-selected="kw"] { background-image: url('https://flagcdn.com/w20/kw.png'); }
+        .prefix-select[data-selected="sg"] { background-image: url('https://flagcdn.com/w20/sg.png'); }
+        .prefix-select[data-selected="my"] { background-image: url('https://flagcdn.com/w20/my.png'); }
+        .prefix-select[data-selected="nz"] { background-image: url('https://flagcdn.com/w20/nz.png'); }
+        .prefix-select[data-selected="pk"] { background-image: url('https://flagcdn.com/w20/pk.png'); }
+        .prefix-select[data-selected="eg"] { background-image: url('https://flagcdn.com/w20/eg.png'); }
+        .prefix-select[data-selected="ch"] { background-image: url('https://flagcdn.com/w20/ch.png'); }
+        .prefix-select[data-selected="at"] { background-image: url('https://flagcdn.com/w20/at.png'); }
+        .prefix-select[data-selected="gr"] { background-image: url('https://flagcdn.com/w20/gr.png'); }
+        .prefix-select[data-selected="se"] { background-image: url('https://flagcdn.com/w20/se.png'); }
+        .prefix-select[data-selected="no"] { background-image: url('https://flagcdn.com/w20/no.png'); }
+        .prefix-select[data-selected="fi"] { background-image: url('https://flagcdn.com/w20/fi.png'); }
+        .prefix-select[data-selected="dk"] { background-image: url('https://flagcdn.com/w20/dk.png'); }
+        .prefix-select[data-selected="be"] { background-image: url('https://flagcdn.com/w20/be.png'); }
+        .prefix-select[data-selected="pl"] { background-image: url('https://flagcdn.com/w20/pl.png'); }
+        .prefix-select[data-selected="cz"] { background-image: url('https://flagcdn.com/w20/cz.png'); }
+        .prefix-select[data-selected="pt"] { background-image: url('https://flagcdn.com/w20/pt.png'); }
+        .prefix-select[data-selected="mx"] { background-image: url('https://flagcdn.com/w20/mx.png'); }
+        .prefix-select[data-selected="il"] { background-image: url('https://flagcdn.com/w20/il.png'); }
+        .prefix-select[data-selected="qa"] { background-image: url('https://flagcdn.com/w20/qa.png'); } /* Qatar */
+        .prefix-select[data-selected="om"] { background-image: url('https://flagcdn.com/w20/om.png'); } /* Oman */
+        .prefix-select[data-selected="mv"] { background-image: url('https://flagcdn.com/w20/mv.png'); } /* Maldives */
+        .prefix-select[data-selected="kw"] { background-image: url('https://flagcdn.com/w20/kw.png'); } /* Kuwait */
+
+
+        /* Common styling for background images */
+        .prefix-select {
+            background-size: 20px 20px;
+            background-repeat: no-repeat;
+            background-position: 80px center;
+            padding-left: 50px;
+        }
+
+      /* Ensure no flag appears when no option is selected */
+        .prefix-select[data-selected=""] {
+            background-image: none;
+        }
+
+        .phone-group .input-phone:focus + .label,
+        .phone-group .input-phone:not(:placeholder-shown) + .label {
+            top: -10px;
+            left: 15px;
+            transform: translateY(0);
+            font-size: 14px;
+            color: #000;
+        }
+
+        .input-email {
+            width: 100%;
+        }
+
+        .mandatory {
+            color: red;
+        }
+
+        .footer-container {
+            text-align: center;
+            color: white;
+            background-color: #3e3636;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+  </style>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed" oncontextmenu="return false">
+<div class="wrapper">
+
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="../../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+  </div>
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="../validation/indexV.php" class="nav-link">Home</a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Contact</a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <!-- Navbar Search -->
+      <li class="nav-item">
+        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+          <i class="fas fa-search"></i>
+        </a>
+        <div class="navbar-search-block">
+          <form class="form-inline">
+            <div class="input-group input-group-sm">
+              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+              <div class="input-group-append">
+                <button class="btn btn-navbar" type="submit">
+                  <i class="fas fa-search"></i>
+                </button>
+                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </li>
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="index.html" class="brand-link">
+      <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span class="brand-text font-weight-light">Gameathon 7.0</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="../../dist/img/user.png" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="#" class="d-block" id="userNameDisplay">Loading...</a>  
+        </div>
+      </div>
+
+      <!-- SidebarSearch Form -->
+      <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-header">APPLICATION</li>
+          <li class="nav-item">
+            <a href="../validation/indexV.php" class="nav-link">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
+          </li>
+          <li class="nav-item menu-open">
+            <a href="#" class="nav-link active">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Application
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="../validation/applicationV.php" class="nav-link active">
+                  <i class="fas fa-pen nav-icon"></i>
+                  <p>Application Form</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./print.html" class="nav-link">
+                  <i class="fas fa-print nav-icon"></i>
+                  <p>Print Application</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-chalkboard-teacher"></i>
+              <p>
+                View Allotment
+              </p>
+            </a>
+          </li>
+          <li class="nav-header">EVENT</li>
+          <li class="nav-item">
+            <a href="../application/abstract.html" class="nav-link">
+              <i class="nav-icon fas fa-paperclip"></i>
+              <p>
+                Abstract Guidelines
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="../validation/uploadV.php" class="nav-link">
+              <i class="nav-icon fas fa-upload"></i>
+              <p>
+                Upload Abstract
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="./schedule.html" class="nav-link">
+              <i class="nav-icon fas fa-calendar-check"></i>
+              <p>
+                Review Schedule
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="../validation/submitV.php" class="nav-link">
+              <i class="nav-icon fas fa-gamepad"></i>
+              <p>
+                Submit Game
+              </p>
+            </a>
+          </li>
+          <li class="nav-header">LOGOUT</li>
+          <li class="nav-item">
+            <a href="../HomePage/Login1.html" class="nav-link">
+              <i class="nav-icon fas fa-power-off"></i>
+              <p>
+                Logout
+              </p>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Application Form</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="../validation/indexV.php">Home</a></li>
+              <li class="breadcrumb-item active">Application</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="container form-container" autocomplete="off">
+            <h2 class="form-title">Personal Information</h2>
+            
+            <p class="form-note">
+                <redtext class="notetitle">Note:</redtext>
+                The details below should be entered as they appear in the College ID Card.<br>
+                No option to edit will be given<br>
+                Use the TAB key present on the keyboard to navigate seamlessly to the next field<br>
+                Select the Institution Name of the Team Lead only
+            </p>
+            
+            <!-- Form start -->
+            <form method="POST" action="../../php/application/application.php" enctype="multipart/form-data">
+            
+            <!-- Member 1 Details -->
+            <div class="member-container">
+                <h3>Member 1 Details</h3>
+                    <div class="form-row">
+                        <div class="col-md-6 input-container">
+                            <input type="text" class="input" name="member1_usn" placeholder=" " maxlength="12" >
+                            <label class="label">USN (Team Lead) <span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-md-6 input-container">
+                            <input type="text" class="input" name="member1_name" placeholder=" " >
+                            <label class="label">Full Name (Team Lead) <span class="mandatory">*</span></label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                      <!-- Mobile Number Container -->
+                      <div class="col-md-6 input-container" style="display: flex;">
+                          <!-- Country Code Selection Container -->
+                          <div style="position: relative; flex-grow: 0.4;">
+                              <!-- Country Code Dropdown -->
+                              <select id="phonePrefix1" class="input prefix-select" name="member1_prefix" >
+                                <option value="" data-flag="" disabled selected>Select</option> <!-- No flag for the default option -->
+                                  <option value="+91" data-flag="https://flagcdn.com/w20/in.png">🇮🇳 +91</option>
+                                  <option value="+1" data-flag="https://flagcdn.com/w20/us.png">🇺🇸 +1</option>
+                                  <option value="+44" data-flag="https://flagcdn.com/w20/gb.png">🇬🇧 +44</option>
+                                  <option value="+81" data-flag="https://flagcdn.com/w20/jp.png">🇯🇵 +81</option>
+                                  <option value="+49" data-flag="https://flagcdn.com/w20/de.png">🇩🇪 +49</option>
+                                  <option value="+33" data-flag="https://flagcdn.com/w20/fr.png">🇫🇷 +33</option>
+                                  <option value="+61" data-flag="https://flagcdn.com/w20/au.png">🇦🇺 +61</option>
+                                  <option value="+86" data-flag="https://flagcdn.com/w20/cn.png">🇨🇳 +86</option>
+                                  <option value="+7" data-flag="https://flagcdn.com/w20/ru.png">🇷🇺 +7</option>
+                                  <option value="+55" data-flag="https://flagcdn.com/w20/br.png">🇧🇷 +55</option>
+                                  <option value="+39" data-flag="https://flagcdn.com/w20/it.png">🇮🇹 +39</option>
+                                  <option value="+34" data-flag="https://flagcdn.com/w20/es.png">🇪🇸 +34</option>
+                                  <option value="+62" data-flag="https://flagcdn.com/w20/id.png">🇮🇩 +62</option>
+                                  <option value="+63" data-flag="https://flagcdn.com/w20/ph.png">🇵🇭 +63</option>
+                                  <option value="+31" data-flag="https://flagcdn.com/w20/nl.png">🇳🇱 +31</option>
+                                  <option value="+27" data-flag="https://flagcdn.com/w20/za.png">🇿🇦 +27</option>
+                                  <option value="+90" data-flag="https://flagcdn.com/w20/tr.png">🇹🇷 +90</option>
+                                  <option value="+66" data-flag="https://flagcdn.com/w20/th.png">🇹🇭 +66</option>
+                                  <option value="+966" data-flag="https://flagcdn.com/w20/sa.png">🇸🇦 +966</option>
+                                  <option value="+971" data-flag="https://flagcdn.com/w20/ae.png">🇦🇪 +971</option>
+                                  <option value="+880" data-flag="https://flagcdn.com/w20/bd.png">🇧🇩 +880</option>
+                                  <option value="+94" data-flag="https://flagcdn.com/w20/lk.png">🇱🇰 +94</option>
+                                  <option value="+974" data-flag="https://flagcdn.com/w20/qa.png">🇶🇦 +974</option>
+                                  <option value="+968" data-flag="https://flagcdn.com/w20/om.png">🇴🇲 +968</option>
+                                  <option value="+960" data-flag="https://flagcdn.com/w20/mv.png">🇲🇻 +960</option>
+                                  <option value="+974" data-flag="https://flagcdn.com/w20/qa.png">🇶🇦 +974</option>
+                                  <option value="+965" data-flag="https://flagcdn.com/w20/kw.png">🇰🇼 +965</option>
+                              </select>
+                              <!-- Country Code Label -->
+                              <label for="phonePrefix1" class="label">Country Code <span style="color: red;">*</span></label>
+                          </div>
+                  
+                          <!-- Mobile Number Input -->
+                          <div style="flex-grow: 2; position: relative;">
+                              <input type="text" class="input" id="mobileNumber1" name="member1_mobile" placeholder=" ">
+                              <label for="mobileNumber1" class="label">Mobile Number (Team Lead) <span style="color: red;">*</span></label>
+                          </div>
+                      </div>
+                        <div class="col-md-6 input-container">
+                            <input type="email" class="input input-email" name="member1_email" placeholder=" " >
+                            <label class="label">Email (Team Lead) <span class="mandatory">*</span></label>
+                        </div>
+                    </div>
+            </div>
+
+            <!-- Member 2 Details -->
+            <div class="member-container">
+                <h3>Member 2 Details</h3>
+                    <div class="form-row">
+                        <div class="col-md-6 input-container">
+                            <input type="text" class="input" name="member2_usn" placeholder=" " maxlength="12" >
+                            <label class="label">USN <span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-md-6 input-container">
+                            <input type="text" class="input" name="member2_name" placeholder=" " >
+                            <label class="label">Full Name <span class="mandatory">*</span></label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                      <!-- Mobile Number Container -->
+                      <div class="col-md-6 input-container" style="display: flex;">
+                          <!-- Country Code Selection Container -->
+                          <div style="position: relative; flex-grow: 0.4;">
+                              <!-- Country Code Dropdown -->
+                              <select id="phonePrefix2" class="input prefix-select" name="member2_prefix" >
+                                <option value="" data-flag="" disabled selected>Select</option> <!-- No flag for the default option -->
+                                <option value="+91" data-flag="https://flagcdn.com/w20/in.png">🇮🇳 +91</option>
+                                <option value="+1" data-flag="https://flagcdn.com/w20/us.png">🇺🇸 +1</option>
+                                <option value="+44" data-flag="https://flagcdn.com/w20/gb.png">🇬🇧 +44</option>
+                                <option value="+81" data-flag="https://flagcdn.com/w20/jp.png">🇯🇵 +81</option>
+                                <option value="+49" data-flag="https://flagcdn.com/w20/de.png">🇩🇪 +49</option>
+                                <option value="+33" data-flag="https://flagcdn.com/w20/fr.png">🇫🇷 +33</option>
+                                <option value="+61" data-flag="https://flagcdn.com/w20/au.png">🇦🇺 +61</option>
+                                <option value="+86" data-flag="https://flagcdn.com/w20/cn.png">🇨🇳 +86</option>
+                                <option value="+7" data-flag="https://flagcdn.com/w20/ru.png">🇷🇺 +7</option>
+                                <option value="+55" data-flag="https://flagcdn.com/w20/br.png">🇧🇷 +55</option>
+                                <option value="+39" data-flag="https://flagcdn.com/w20/it.png">🇮🇹 +39</option>
+                                <option value="+34" data-flag="https://flagcdn.com/w20/es.png">🇪🇸 +34</option>
+                                <option value="+62" data-flag="https://flagcdn.com/w20/id.png">🇮🇩 +62</option>
+                                <option value="+63" data-flag="https://flagcdn.com/w20/ph.png">🇵🇭 +63</option>
+                                <option value="+31" data-flag="https://flagcdn.com/w20/nl.png">🇳🇱 +31</option>
+                                <option value="+27" data-flag="https://flagcdn.com/w20/za.png">🇿🇦 +27</option>
+                                <option value="+90" data-flag="https://flagcdn.com/w20/tr.png">🇹🇷 +90</option>
+                                <option value="+66" data-flag="https://flagcdn.com/w20/th.png">🇹🇭 +66</option>
+                                <option value="+966" data-flag="https://flagcdn.com/w20/sa.png">🇸🇦 +966</option>
+                                <option value="+971" data-flag="https://flagcdn.com/w20/ae.png">🇦🇪 +971</option>
+                                <option value="+880" data-flag="https://flagcdn.com/w20/bd.png">🇧🇩 +880</option>
+                                <option value="+94" data-flag="https://flagcdn.com/w20/lk.png">🇱🇰 +94</option>
+                                <option value="+974" data-flag="https://flagcdn.com/w20/qa.png">🇶🇦 +974</option>
+                                <option value="+968" data-flag="https://flagcdn.com/w20/om.png">🇴🇲 +968</option>
+                                <option value="+960" data-flag="https://flagcdn.com/w20/mv.png">🇲🇻 +960</option>
+                                <option value="+974" data-flag="https://flagcdn.com/w20/qa.png">🇶🇦 +974</option>
+                                <option value="+965" data-flag="https://flagcdn.com/w20/kw.png">🇰🇼 +965</option>
+                              </select>
+                              <!-- Country Code Label -->
+                              <label for="phonePrefix2" class="label">Country Code <span style="color: red;">*</span></label>
+                          </div>
+              
+                          <!-- Mobile Number Input -->
+                          <div style="flex-grow: 2; position: relative;">
+                              <input type="text" class="input" id="mobileNumber2" name="member2_mobile" placeholder=" ">
+                              <label for="mobileNumber2" class="label">Mobile Number <span style="color: red;">*</span></label>
+                          </div>
+                      </div>
+                        <div class="col-md-6 input-container">
+                            <input type="email" class="input input-email" name="member2_email" placeholder=" " >
+                            <label class="label">Email <span class="mandatory">*</span></label>
+                        </div>
+                    </div>
+            </div>
+
+            <!-- Member 3 Details -->
+            <div class="member-container">
+                <h3>Member 3 Details</h3>
+                    <div class="form-row">
+                        <div class="col-md-6 input-container">
+                            <input type="text" class="input" name="member3_usn" placeholder=" " maxlength="12" >
+                            <label class="label">USN</label>
+                        </div>
+                        <div class="col-md-6 input-container">
+                            <input type="text" class="input" name="member3_name" placeholder=" " >
+                            <label class="label">Full Name</label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                      <!-- Mobile Number Container -->
+                      <div class="col-md-6 input-container" style="display: flex;">
+                          <!-- Country Code Selection Container -->
+                          <div style="position: relative; flex-grow: 0.4;">
+                              <!-- Country Code Dropdown -->
+                              <select id="phonePrefix3" class="input prefix-select" name="member3_prefix" >
+                                <option value="" data-flag="" disabled selected>Select</option> <!-- No flag for the default option -->
+                                <option value="+91" data-flag="https://flagcdn.com/w20/in.png">🇮🇳 +91</option>
+                                <option value="+1" data-flag="https://flagcdn.com/w20/us.png">🇺🇸 +1</option>
+                                <option value="+44" data-flag="https://flagcdn.com/w20/gb.png">🇬🇧 +44</option>
+                                <option value="+81" data-flag="https://flagcdn.com/w20/jp.png">🇯🇵 +81</option>
+                                <option value="+49" data-flag="https://flagcdn.com/w20/de.png">🇩🇪 +49</option>
+                                <option value="+33" data-flag="https://flagcdn.com/w20/fr.png">🇫🇷 +33</option>
+                                <option value="+61" data-flag="https://flagcdn.com/w20/au.png">🇦🇺 +61</option>
+                                <option value="+86" data-flag="https://flagcdn.com/w20/cn.png">🇨🇳 +86</option>
+                                <option value="+7" data-flag="https://flagcdn.com/w20/ru.png">🇷🇺 +7</option>
+                                <option value="+55" data-flag="https://flagcdn.com/w20/br.png">🇧🇷 +55</option>
+                                <option value="+39" data-flag="https://flagcdn.com/w20/it.png">🇮🇹 +39</option>
+                                <option value="+34" data-flag="https://flagcdn.com/w20/es.png">🇪🇸 +34</option>
+                                <option value="+62" data-flag="https://flagcdn.com/w20/id.png">🇮🇩 +62</option>
+                                <option value="+63" data-flag="https://flagcdn.com/w20/ph.png">🇵🇭 +63</option>
+                                <option value="+31" data-flag="https://flagcdn.com/w20/nl.png">🇳🇱 +31</option>
+                                <option value="+27" data-flag="https://flagcdn.com/w20/za.png">🇿🇦 +27</option>
+                                <option value="+90" data-flag="https://flagcdn.com/w20/tr.png">🇹🇷 +90</option>
+                                <option value="+66" data-flag="https://flagcdn.com/w20/th.png">🇹🇭 +66</option>
+                                <option value="+966" data-flag="https://flagcdn.com/w20/sa.png">🇸🇦 +966</option>
+                                <option value="+971" data-flag="https://flagcdn.com/w20/ae.png">🇦🇪 +971</option>
+                                <option value="+880" data-flag="https://flagcdn.com/w20/bd.png">🇧🇩 +880</option>
+                                <option value="+94" data-flag="https://flagcdn.com/w20/lk.png">🇱🇰 +94</option>
+                                <option value="+974" data-flag="https://flagcdn.com/w20/qa.png">🇶🇦 +974</option>
+                                <option value="+968" data-flag="https://flagcdn.com/w20/om.png">🇴🇲 +968</option>
+                                <option value="+960" data-flag="https://flagcdn.com/w20/mv.png">🇲🇻 +960</option>
+                                <option value="+974" data-flag="https://flagcdn.com/w20/qa.png">🇶🇦 +974</option>
+                                <option value="+965" data-flag="https://flagcdn.com/w20/kw.png">🇰🇼 +965</option>
+                              </select>
+                              <!-- Country Code Label -->
+                              <label for="phonePrefix3" class="label">Country Code</label>
+                          </div>
+              
+                          <!-- Mobile Number Input -->
+                          <div style="flex-grow: 2; position: relative;">
+                              <input type="text" class="input" id="mobileNumber3" name="member3_mobile" placeholder=" ">
+                              <label for="mobileNumber3" class="label">Mobile Number</label>
+                          </div>
+                      </div>
+                        <div class="col-md-6 input-container">
+                            <input type="email" class="input input-email" name="member3_email" placeholder=" " >
+                            <label class="label">Email</label>
+                        </div>
+                    </div>
+            </div>
+
+            <!-- Member 4 Details -->
+            <div class="member-container">
+                <h3>Member 4 Details</h3>
+                    <div class="form-row">
+                        <div class="col-md-6 input-container">
+                            <input type="text" class="input" name="member4_usn" placeholder=" " maxlength="12" >
+                            <label class="label">USN</label>
+                        </div>
+                        <div class="col-md-6 input-container">
+                            <input type="text" class="input" name="member4_name" placeholder=" " >
+                            <label class="label">Full Name</label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                      <!-- Mobile Number Container -->
+                      <div class="col-md-6 input-container" style="display: flex;">
+                          <!-- Country Code Selection Container -->
+                          <div style="position: relative; flex-grow: 0.4;">
+                              <!-- Country Code Dropdown -->
+                              <select id="phonePrefix4" class="input prefix-select" name="member4_prefix" >
+                                <option value="" data-flag="" disabled selected>Select</option> <!-- No flag for the default option -->
+                                <option value="+91" data-flag="https://flagcdn.com/w20/in.png">🇮🇳 +91</option>
+                                <option value="+1" data-flag="https://flagcdn.com/w20/us.png">🇺🇸 +1</option>
+                                <option value="+44" data-flag="https://flagcdn.com/w20/gb.png">🇬🇧 +44</option>
+                                <option value="+81" data-flag="https://flagcdn.com/w20/jp.png">🇯🇵 +81</option>
+                                <option value="+49" data-flag="https://flagcdn.com/w20/de.png">🇩🇪 +49</option>
+                                <option value="+33" data-flag="https://flagcdn.com/w20/fr.png">🇫🇷 +33</option>
+                                <option value="+61" data-flag="https://flagcdn.com/w20/au.png">🇦🇺 +61</option>
+                                <option value="+86" data-flag="https://flagcdn.com/w20/cn.png">🇨🇳 +86</option>
+                                <option value="+7" data-flag="https://flagcdn.com/w20/ru.png">🇷🇺 +7</option>
+                                <option value="+55" data-flag="https://flagcdn.com/w20/br.png">🇧🇷 +55</option>
+                                <option value="+39" data-flag="https://flagcdn.com/w20/it.png">🇮🇹 +39</option>
+                                <option value="+34" data-flag="https://flagcdn.com/w20/es.png">🇪🇸 +34</option>
+                                <option value="+62" data-flag="https://flagcdn.com/w20/id.png">🇮🇩 +62</option>
+                                <option value="+63" data-flag="https://flagcdn.com/w20/ph.png">🇵🇭 +63</option>
+                                <option value="+31" data-flag="https://flagcdn.com/w20/nl.png">🇳🇱 +31</option>
+                                <option value="+27" data-flag="https://flagcdn.com/w20/za.png">🇿🇦 +27</option>
+                                <option value="+90" data-flag="https://flagcdn.com/w20/tr.png">🇹🇷 +90</option>
+                                <option value="+66" data-flag="https://flagcdn.com/w20/th.png">🇹🇭 +66</option>
+                                <option value="+966" data-flag="https://flagcdn.com/w20/sa.png">🇸🇦 +966</option>
+                                <option value="+971" data-flag="https://flagcdn.com/w20/ae.png">🇦🇪 +971</option>
+                                <option value="+880" data-flag="https://flagcdn.com/w20/bd.png">🇧🇩 +880</option>
+                                <option value="+94" data-flag="https://flagcdn.com/w20/lk.png">🇱🇰 +94</option>
+                                <option value="+974" data-flag="https://flagcdn.com/w20/qa.png">🇶🇦 +974</option>
+                                <option value="+968" data-flag="https://flagcdn.com/w20/om.png">🇴🇲 +968</option>
+                                <option value="+960" data-flag="https://flagcdn.com/w20/mv.png">🇲🇻 +960</option>
+                                <option value="+974" data-flag="https://flagcdn.com/w20/qa.png">🇶🇦 +974</option>
+                                <option value="+965" data-flag="https://flagcdn.com/w20/kw.png">🇰🇼 +965</option>
+                              </select>
+                              <!-- Country Code Label -->
+                              <label for="phonePrefix4" class="label">Country Code</label>
+                          </div>
+              
+                          <!-- Mobile Number Input -->
+                          <div style="flex-grow: 2; position: relative;">
+                              <input type="text" class="input" id="mobileNumber4" name="member4_mobile" placeholder=" ">
+                              <label for="mobileNumber4" class="label">Mobile Number</label>
+                          </div>
+                      </div>
+                        <div class="col-md-6 input-container">
+                            <input type="email" class="input input-email" name="member4_email" placeholder=" " >
+                            <label class="label">Email</label>
+                        </div>
+                    </div>
+            </div>
+
+
+            <!-- Participation Details -->
+<div class="participation-container" style="background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); margin-bottom: 20px;">
+  <h3>Participation Details</h3>
+  <div class="form-row">
+     <!-- Dropdown for Mode of Participation -->
+     <div class="col-md-4 input-container">
+        <select name="mode_of_participation" class="input" >
+           <optgroup style="color: red; font-weight: bold; text-align: center;" label="-------------------------------------------------------------------------------------------INDIA------------------------------------------------------------------------------"></optgroup>
+           <option value="" disabled selected hidden>Select</option>
+           <option value="Off-WT">Offline - With Training (699)</option>
+           <option value="On-WT">Online - With Training (499)</option>
+           <option value="Off-T">Offline - Without Training (499)</option>
+           <option value="On-T">Online - Without Training (349)</option>
+           <optgroup style="color: red; font-weight: bold; text-align: center;" label="---------------------------------------------------------------------------------------INTERNATIONAL---------------------------------------------------------------------------------------------"></optgroup>
+           <option value="On-WT">Online - With Training ($15)</option>
+           <option value="On-T">Online - Without Training ($10)</option>
+        </select>
+        <label class="label">Mode of Participation <span class="mandatory">*</span></label>
+     </div>
+
+     <!-- Input for Team Name -->
+     <div class="col-md-4 input-container">
+        <input type="text" class="input" name="team_name" placeholder=" " >
+        <label class="label">Team Name <span class="mandatory">*</span></label>
+     </div>
+
+     <!-- Input for Team Name -->
+     <div class="col-md-4 input-container">
+      <select name="semester" class="input" >
+        <option value="" disabled selected hidden>Select</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+      </select>
+      <label class="label">Semester <span class="mandatory">*</span></label>
+   </div>
+  </div>
+
+  <!-- Input for College Name -->
+  <div class="form-row">
+     <div class="col-md-12 input-container">
+        <input type="text" class="input" name="college_name" placeholder=" " >
+        <label class="label">College Name <span class="mandatory">*</span></label>
+     </div>
+  </div>
+</div>
+
+
+
+            <!-- File Uploads -->
+            <div class="file-container">
+                <h3>File Uploads</h3>
+                    <div class="form-row">
+                        <div class="col-md-6 input-container">
+                            <input type="file" class="input" name="id_card" id="id_card">
+                            <label class="label">ID Card <span class="mandatory">*</span></label>
+                        </div>
+                        <div class="col-md-6 input-container">
+                            <input type="file" class="input" name="acknowledgment" id="acknowledgment" >
+                            <label class="label">Acknowledgment <span class="mandatory">*</span></label>
+                        </div>
+                    </div>
+            </div>
+
+
+
+           <!-- Transaction Details -->
+            <div class="transaction-container">
+              <h3>Transaction Details</h3>
+              <div class="form-row">
+                  <div class="col-md-6 input-container">
+                      <input type="text" class="input input-TId" name="transaction_id" placeholder=" ">
+                      <label class="label">Transaction ID <span class="mandatory">*</span></label>
+                  </div>
+                  <div class="col-md-6 input-container">
+                      <input type="datetime-local" class="input input-dot" name="transaction_date" placeholder=" ">
+                      <label class="label">Date of Transaction <span class="mandatory">*</span></label>
+                  </div>
+              </div>
+              <div style="display: flex; align-items: center;" >
+               <div class="col-md-6 input-container">
+                  <img src="../../dist/gpay QR cropped.jpg" alt="QR" style="height: 300px; width: 300px;" ><br>
+                </div>
+                  <p style="color: red; margin-left: 10px; flex: 1;" class="col-md-6 input-container" >
+                      Please scan the QR code to make the payment. Ensure that you enter the correct transaction details, as shown on your payment confirmation.<br>
+                      <redtext>NOTE:</redtext> The payment is non-refundable.<br>
+                      <redtext>NOTE:</redtext> Wrong entry of the transaction details leads to disqualification / cancellation of the application.
+                  </p>
+              </div>
+            </div>
+
+
+
+            <!-- validating file size of id_card-->
+             <script>
+              let fileInput = document.getElementById('id_card');
+              let maxFileSize = 2097152; // 2MB
+              
+              fileInput.addEventListener('change', function() {
+                let fileSize = fileInput.files[0].size;
+                if (fileSize > maxFileSize) {
+                  alert('File too large. Please select a file smaller than 2MB.');
+                  fileInput.value = ''; // reset the file input
+                }
+              });
+            </script>
+
+            <!-- validating file size of acknowledgment-->
+            <script>
+              let fileinput1 = document.getElementById('acknowledgment');
+              let maxfilesize1 = 2097152; // 2MB
+              
+              fileinput1.addEventListener('change', function() {
+                let fileSize = fileinput1.files[0].size;
+                if (fileSize > maxfilesize1) {
+                  alert('File too large. Please select a file smaller than 2MB.');
+                  fileinput1.value = ''; // reset the file input
+                }
+              });
+            </script>
+
+
+            <!-- Submit and Cancel -->
+            <div class="form-row">
+                <div class="col-md-3">
+                    <a href="index.html"><button name="cancel" type="button" class="form-control btn-danger">CANCEL</button></a>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-3">
+                  <form method="POST" action="../../php/application/application.php" enctype="multipart/form-data"></form>
+                    <input name="submit" type="submit" class="form-control btn-success" value="SUBMIT" />
+                </form>
+                </div>
+            </div>
+
+            </form> <!-- Form End -->
+        </div>
+      </div>
+    </section>
+</div>
+<!-- /.content-wrapper -->
+<footer class="main-footer">
+  <strong>Copyright &copy; 2024 <a href="https://www.jyothyit.ac.in" target="_blank">Gameathon 7.0</a>.</strong>
+  All rights reserved.
+  <div class="float-right d-none d-sm-inline-block">
+    <b>Version</b> 3.2.0
+  </div>
+</footer>
+
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+  <!-- Control sidebar content goes here -->
+</aside>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="../../plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+$.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- ChartJS -->
+<script src="../../plugins/chart.js/Chart.min.js"></script>
+<!-- Sparkline -->
+<script src="../../plugins/sparklines/sparkline.js"></script>
+<!-- JQVMap -->
+<script src="../../plugins/jqvmap/jquery.vmap.min.js"></script>
+<script src="../../plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+<!-- jQuery Knob Chart -->
+<script src="../../plugins/jquery-knob/jquery.knob.min.js"></script>
+<!-- daterangepicker -->
+<script src="../../plugins/moment/moment.min.js"></script>
+<script src="../..plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="../../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- Summernote -->
+<script src="../../plugins/summernote/summernote-bs4.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="../../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.js"></script>
+<!-- AdminLTE for demo purposes -->
+<!-- <script src="../../dist/js/demo.js"></script> -->
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="../../dist/js/pages/dashboard.js"></script>
+<script>
+  function setPhonePrefixBehavior(prefixId, mobileId) {
+    document.getElementById(prefixId).addEventListener("change", function () {
+        const selected = this.value;
+
+        let flag = '';
+        let maxLength = 10; // Default max length
+
+        switch (selected) {
+            case '+91': flag = 'in'; maxLength = 10; break;
+            case '+1': flag = 'us'; maxLength = 10; break;
+            case '+44': flag = 'gb'; maxLength = 10; break;
+            case '+81': flag = 'jp'; maxLength = 11; break;
+            case '+49': flag = 'de'; maxLength = 11; break;
+            case '+33': flag = 'fr'; maxLength = 9; break;
+            case '+61': flag = 'au'; maxLength = 9; break;
+            case '+86': flag = 'cn'; maxLength = 11; break;
+            case '+7': flag = 'ru'; maxLength = 10; break;
+            case '+55': flag = 'br'; maxLength = 11; break;
+            case '+39': flag = 'it'; maxLength = 10; break;
+            case '+34': flag = 'es'; maxLength = 9; break;
+            case '+62': flag = 'id'; maxLength = 12; break;
+            case '+63': flag = 'ph'; maxLength = 10; break;
+            case '+31': flag = 'nl'; maxLength = 9; break;
+            case '+27': flag = 'za'; maxLength = 9; break;
+            case '+90': flag = 'tr'; maxLength = 10; break;
+            case '+66': flag = 'th'; maxLength = 9; break;
+            case '+966': flag = 'sa'; maxLength = 9; break;
+            case '+971': flag = 'ae'; maxLength = 9; break;
+            case '+880': flag = 'bd'; maxLength = 11; break;
+            case '+94': flag = 'lk'; maxLength = 10; break;
+            case '+974': flag = 'qa'; maxLength = 8; break;
+            case '+968': flag = 'om'; maxLength = 8; break;
+            case '+960': flag = 'mv'; maxLength = 7; break;
+            case '+965': flag = 'kw'; maxLength = 8; break;
+            default: maxLength = 10; // Default length
+        }
+
+        this.setAttribute("data-selected", flag);
+        const mobileInput = document.getElementById(mobileId);
+        mobileInput.setAttribute("maxlength", maxLength);
+        const pattern = 1234567890;
+        return pattern.test(mobileInput);
+    });
+    // Regular expression to validate URLs
+    
+}
+
+// Initialize behavior for each member
+setPhonePrefixBehavior("phonePrefix1", "mobileNumber1");
+setPhonePrefixBehavior("phonePrefix2", "mobileNumber2");
+setPhonePrefixBehavior("phonePrefix3", "mobileNumber3");
+setPhonePrefixBehavior("phonePrefix4", "mobileNumber4");
+
+</script>
+<script>
+  document.querySelector('form').addEventListener('submit', function(event) {
+    let isValid = true;
+
+    // Clear previous error messages
+    document.querySelectorAll('.error-text').forEach(error => error.remove());
+
+    // Validate each required field
+    // const requiredFields = [
+    //     { selector: 'input[name="member1_usn"]', errorMessage: 'USN (Team Lead) is required.' },
+    //     { selector: 'input[name="member1_name"]', errorMessage: 'Full Name (Team Lead) is required.' },
+    //     { selector: 'select[name="member1_prefix"]', errorMessage: 'Country Code is required.' },
+    //     { selector: 'input[name="member1_mobile"]', errorMessage: 'Mobile Number (Team Lead) is required.' },
+    //     { selector: 'input[name="member1_email"]', errorMessage: 'Email (Team Lead) is required.' },
+    //     { selector: 'input[name="member2_usn"]', errorMessage: 'USN (Member 2) is required.' },
+    //     { selector: 'input[name="member2_name"]', errorMessage: 'Full Name (Member 2) is required.' },
+    //     { selector: 'select[name="member2_prefix"]', errorMessage: 'Country Code is required.' },
+    //     { selector: 'input[name="member2_mobile"]', errorMessage: 'Mobile Number (Member 2) is required.' },
+    //     { selector: 'input[name="member2_email"]', errorMessage: 'Email (Member 2) is required.' },
+    //     { selector: 'input[name="member3_usn"]', errorMessage: 'USN (Member 3) is required.' },
+    //     { selector: 'input[name="member3_name"]', errorMessage: 'Full Name (Member 3) is required.' },
+    //     { selector: 'select[name="member3_prefix"]', errorMessage: 'Country Code is required.' },
+    //     { selector: 'input[name="member3_mobile"]', errorMessage: 'Mobile Number (Member 3) is required.' },
+    //     { selector: 'input[name="member3_email"]', errorMessage: 'Email (Member 3) is required.' },
+    //     { selector: 'input[name="member4_usn"]', errorMessage: 'USN (Member 4) is required.' },
+    //     { selector: 'input[name="member4_name"]', errorMessage: 'Full Name (Member 4) is required.' },
+    //     { selector: 'select[name="member4_prefix"]', errorMessage: 'Country Code is required.' },
+    //     { selector: 'input[name="member4_mobile"]', errorMessage: 'Mobile Number (Member 4) is required.' },
+    //     { selector: 'input[name="member4_email"]', errorMessage: 'Email (Member 4) is required.' },
+    //     { selector: 'select[name="mode_of_participation"]', errorMessage: 'Mode of Participation is required.' },
+    //     { selector: 'input[name="team_name"]', errorMessage: 'Team Name is required.' },
+    //     { selector: 'input[name="college_name"]', errorMessage: 'College Name is required.' },
+    //     { selector: 'input[name="id_card"]', errorMessage: 'ID Card is required.' },
+    //     { selector: 'input[name="acknowledgment"]', errorMessage: 'Acknowledgment is required.' },
+    //     { selector: 'input[name="transaction_id"]', errorMessage: 'Transaction ID is required.' },
+    //     { selector: 'input[name="transaction_date"]', errorMessage: 'Date of Transaction is required.' },
+    // ];
+
+    requiredFields.forEach(field => {
+        const input = document.querySelector(field.selector);
+        if (!input.value.trim()) {
+            isValid = false; 
+            input.classList.add('error');
+            
+            // Display error message below the field
+            const errorSpan = document.createElement('span');
+            errorSpan.className = 'error-text';
+            errorSpan.textContent = field.errorMessage;
+            input.insertAdjacentElement('afterend', errorSpan);
+        } else {
+            input.classList.remove('error');
+        }
+    });
+
+    if (!isValid) {
+        event.preventDefault(); // Prevent form submission if validation fails
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gameathon 7.0 Applicant Login Signup Form</title>
+    <link rel="shortcut icon" href="favicon.png">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            width: 100%;
+            max-width: 900px; /* Match with .form-container width */
+            margin: 0 auto; /* Center horizontally */
+            box-sizing: border-box; /* Include padding and border in width calculation */
+        }
+
+        .header-content {
+            width: 100%;
+            max-width: 1080px; /* Match with .form-container width */
+            margin: 0 auto; /* Center horizontally */
+            box-sizing: border-box; /* Include padding and border in width calculation */
+        }
+
+        .header-content img {
+            display: block;
+            width: 100%; /* Make image responsive */
+            height: auto; /* Maintain aspect ratio */
+            background-size: cover; /* Cover the width of the header */
+        }
+
+        .header-content h3 {
+            background-color: black; /* Set background color to black */
+            color: white; /* Ensure text color is readable on black background */
+            text-align: center;
+            margin: 0;
+            padding: 10px;
+            font-size: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(92, 99, 105, .2);
+            border-radius: 8px;
+            background-color: white;
+            margin: 20px auto;
+            max-width: 900px;
+            box-sizing: border-box;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 38px;
+            text-align: left;
+        }
+
+        .input {
+            width: 100%;
+            height: 50px;
+            padding: 14px;
+            font-size: 14px;
+            border: 1px solid #DADCE0;
+            border-radius: 4px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .input:focus {
+            border-color: #007bff;
+            background-color: #ffffff;
+        }
+
+        .label {
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            transition: 0.3s;
+            transform: translateY(-50%);
+            background: white;
+            padding: 0 5px;
+            font-size: 16px;
+            color: #aaa;
+        }
+
+        .input:focus + .label,
+        .input:not(:placeholder-shown) + .label {
+            top: -10px;
+            left: 14px;
+            transform: translateY(0);
+            font-size: 14px;
+            color: #007bff;
+        }
+
+        .phone-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .phone-prefix {
+            padding: 0 10px;
+            font-size: 14px;
+            background-color: white;
+            border: 1px solid #DADCE0;
+            border-radius: 4px 0 0 4px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-phone {
+            flex-grow: 1;
+            border-radius: 0 4px 4px 0;
+            border: 1px solid #DADCE0;
+            height: 50px;
+            padding-left: 14px;
+            outline: none;
+        }
+
+        .phone-group .label {
+            position: absolute;
+            top: 50%;
+            left: 60px; /* Adjust label to be correctly aligned within the input */
+            transition: 0.3s;
+            transform: translateY(-50%);
+            background: white;
+            padding: 0 5px;
+            font-size: 16px;
+            color: #aaa;
+            pointer-events: none;
+        }
+
+        .input-phone:focus ~ .label,
+        .input-phone:not(:placeholder-shown) ~ .label {
+            top: -10px;
+            left: 18px;
+            transform: translateY(0);
+            font-size: 14px;
+            color: #007bff;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 14px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .password-toggle:hover {
+            color: #007bff;
+        }
+
+        .error-message{
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            position: absolute; /* Absolute positioning to not affect label */
+            bottom: -20px; /* Position it below the input field */
+            left: 14px; /* Align it with the input padding */
+     }
+
+     #mobile-error{
+        top: 40px;
+        color: red;
+     }
+     
+     .input-error {
+            border-color: red;
+    }
+
+    .footer-wrapper {
+         width: 100%;
+         max-width: 900px; /* Match with form container width */
+         margin: 20px auto; /* Center horizontally */
+         box-sizing: border-box; /* Include padding and border in width calculation */
+     }
+
+     .footer-container {
+         text-align: center;
+         color: white;
+         background:#737070;
+         margin:0px;
+         box-shadow:0px 0px 10px 0px #888888;
+         padding: 10px;
+         border-radius: 8px;
+         width: 100%;
+         box-sizing: border-box;
+     }
+
+     .footer-container p {
+         margin: 0; /* Remove default margin */
+         font-size: 14px; /* Adjust font size as needed */
+     }
+
+     .footer-container b {
+         font-weight: bold; /* Make the text bold */
+     }
+
+     .form-wrapper {
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(92, 99, 105, .2);
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+}
+
+        .form-container {
+            display: none;
+            padding: 30px;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .form-links {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .form-title {
+        margin-bottom: 30px;
+        color: #333;
+        font-size: 24px;
+        text-align: center;
+    }
+
+        .form-links a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .form-links a:hover {
+            text-decoration: underline;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .grid-container .col-md-12 {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-container .col-md-12 {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="new_header1.png" alt="VTU">
+            <h3>Applicant Login and Signup Form</h3>
+        </div>
+    </header>
+    <div class="form-container active" id="login-form">
+    <h2 class="form-title">Applicant Login</h2>
+        <form autocomplete="off">
+            <div class="form-row">
+                <div class="col-md-12 input-container">
+                    <input type="email" class="input" id="login-email" placeholder=" ">
+                    <label for="login-email" class="label">Email <span style="color: red;">*</span></label>
+                </div>
+    
+                <div class="col-md-12 input-container">
+                    <input type="password" class="input" id="login-password" placeholder=" ">
+                    <label for="login-password" class="label">Password <span style="color: red;">*</span></label>
+                    <i class="password-toggle fas fa-eye" id="toggleLoginPassword"></i>
+                </div>
+    
+                <div class="col-md-6">
+                    <button type="reset" class="btn btn-danger btn-block" style="text-transform: uppercase;">Reset</button>
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success btn-block" style="text-transform: uppercase;">Login</button>
+                </div>
+            </div>
+        </form>
+        <div class="form-links">
+            Don't have an account? <a href="#" data-form="signup">Sign up</a><br>
+            <a href="#" data-form="forgot-password">Forgot Password?</a>
+        </div>
+    </div>
+
+<div class="form-container" id="signup-form">
+    <h2 class="form-title">Applicant Signup</h2>
+    <form autocomplete="off">
+        <div class="form-row">
+
+            <div class="col-md-6 input-container" style="display: flex;">
+                <!-- Input for Faculty Name -->
+                <div style="flex-grow: 2; position: relative;">
+                    <input type="text" class="input" id="teamLeadName" placeholder=" ">
+                    <label for="teamLeadName" class="label">Applicant Name <span style="color: red;">*</span></label>
+                </div>
+            </div>                    
+
+            <div class="col-md-6 input-container">
+                <input type="email" class="input" id="email" placeholder=" " autocomplete="off">
+                <label for="email" class="label">Email <span style="color: red;">*</span></label>
+            </div>
+
+           
+
+            <div class="col-md-6 input-container">
+                <input type="password" class="input" id="password" placeholder=" ">
+                <label for="password" class="label">Password <span style="color: red;" class="mandatory">*</span></label>
+                <i class="password-toggle fas fa-eye" id="togglePassword"></i>
+            </div>
+
+            <div class="col-md-6 input-container">
+                <input type="password" class="input" id="confirm-password" placeholder=" ">
+                <label for="confirm-password" class="label">Confirm Password <span style="color: red;" class="mandatory">*</span></label>
+                <i class="password-toggle fas fa-eye" id="toggleConfirmPassword"></i>
+            </div>
+
+            <div class="col-md-6">
+                <button type="reset" class="btn btn-danger btn-block" style="text-transform: uppercase;">Reset</button>
+            </div>
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-success btn-block" style="text-transform: uppercase;">Register</button>
+            </div>
+        </div>
+    </form>
+    <div class="form-links">
+        Already have an account? <a href="#" data-form="login">Login</a><br>
+    </div>
+    </div>
+</div>
+
+
+<div class="form-container" id="forgot-password-form">
+    <h2 class="form-title">Forgot Password</h2>
+    <form autocomplete="off">
+        <div class="grid-container">
+            <div class="input-container">
+                <input type="text" class="input" id="forgot-teamID" placeholder=" ">
+                <label for="forgot-teamID" class="label">Team ID <span style="color: red;">*</span></label>
+            </div>
+
+            <div class="input-container">
+                <input type="email" class="input" id="forgot-email" placeholder=" ">
+                <label for="forgot-email" class="label">Email <span style="color: red;">*</span></label>
+            </div>
+
+            <div class="input-container">
+                <input type="text" class="input" id="forgot-mobile" placeholder=" ">
+                <label for="forgot-mobile" class="label">Mobile Number <span style="color: red;">*</span></label>
+            </div>
+
+            <div class="input-container">
+                <input type="date" class="input" id="forgot-dob" placeholder=" ">
+                <label for="forgot-dob" class="label">Date of Birth <span style="color: red;">*</span></label>
+            </div>
+
+            <div class="input-container">
+                <button type="reset" class="btn btn-danger btn-block" style="text-transform: uppercase;">Reset</button>
+            </div>
+            <div class="input-container">
+                <button type="submit" class="btn btn-success btn-block" style="text-transform: uppercase;">Submit</button>
+            </div>
+        </div>
+    </form>
+    <div class="form-links">
+        Remember your password? <a href="#" data-form="login">Login</a><br>
+        Don't have an account? <a href="#" data-form="signup">Sign up</a>
+    </div>
+</div>
+</div>
+
+<script>
+    // Toggle visibility of the password field for signup
+    document.getElementById('togglePassword').addEventListener('click', function () {
+            const password = document.getElementById('password');
+            const type = password.type === 'password' ? 'text' : 'password';
+            password.type = type;
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Toggle visibility of the confirm password field for signup
+        document.getElementById('toggleConfirmPassword').addEventListener('click', function () {
+            const confirmPassword = document.getElementById('confirm-password');
+            const type = confirmPassword.type === 'password' ? 'text' : 'password';
+            confirmPassword.type = type;
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        document.getElementById('toggleLoginPassword').addEventListener('click', function () {
+            const confirmPassword = document.getElementById('confirm-password');
+            const type = confirmPassword.type === 'password' ? 'text' : 'password';
+            confirmPassword.type = type;
+            this.classList.toggle('fa-eye-slash');
+        });
+
+         // Form switching functionality
+         document.querySelectorAll('.form-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
+                document.getElementById(this.dataset.form + '-form').classList.add('active');
+            });
+        });
+</script>
+<script>
+   // Signup Form Validation
+function setupSignupValidation() {
+    const signupForm = document.querySelector('#signup-form');
+    if (!signupForm) return;
+
+    signupForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        let isValid = true;
+        
+        // Faculty Name validation
+        validateField('teamLeadName', value => value && /^[a-zA-Z\s]+$/.test(value),
+            'Team Lead Name is required', isValid);
+        
+        // Email validation
+        validateField('email', value => value && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value),
+            'Please enter a valid email address.', isValid);
+        
+        // Password validation
+        validateField('password', value => value && value.length >= 8,
+            'Password is required and should be at least 8 characters long.', isValid);
+        
+        // Confirm Password validation
+        validateField('confirm-password', value => value === document.getElementById('password').value,
+            'Passwords do not match.', isValid);
+
+        if (isValid) {
+            this.submit();
+        }
+    });
+
+    addInputListeners(signupForm);
+}
+
+// Login Form Validation
+function setupLoginValidation() {
+    const loginForm = document.querySelector('#login-form');
+    if (!loginForm) return;
+
+    loginForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        let isValid = true;
+        // Email validation
+        validateField('login-email', value => value && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value),
+            'Please enter a valid email address.', isValid);
+
+        // Password validation
+        validateField('login-password', value => value && value.length >= 8,
+            'Password is required and should be at least 8 characters long.', isValid);
+
+        if (isValid) {
+            this.submit();
+        }
+    });
+
+    addInputListeners(loginForm);
+}
+
+// Forgot Password Form Validation
+function setupForgotPasswordValidation() {
+    const forgotPasswordForm = document.querySelector('#forgot-password-form');
+    if (!forgotPasswordForm) return;
+
+    forgotPasswordForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        let isValid = true;
+
+        // Faculty ID validation
+        validateField('forgot-teamID', value => value && /^[a-zA-Z0-9]+$/.test(value),
+            'Team ID is required and should be alphanumeric.', isValid);
+
+        // Email validation
+        validateField('forgot-email', value => value && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value),
+            'Please enter a valid email address.', isValid);
+
+        // Mobile Number validation
+        validateField('forgot-mobile', value => value && /^\d{10}$/.test(value),
+            'Please enter a valid 10-digit mobile number.', isValid);
+
+        // Date of Birth validation
+        validateField('forgot-dob', value => value && new Date(value) < new Date(),
+            'Please enter a valid date of birth.', isValid);
+
+        if (isValid) {
+            this.submit();
+        }
+    });
+
+    addInputListeners(forgotPasswordForm);
+}
+
+// Helper function to validate fields
+function validateField(fieldId, validationFunction, errorMessage, isValid) {
+    const field = document.getElementById(fieldId);
+    if (!validationFunction(field.value.trim())) {
+        showError(field, errorMessage);
+        isValid = false;
+    } else {
+        removeError(field);
+    }
+    return isValid;
+}
+
+// Function to add input and blur event listeners
+function addInputListeners(form) {
+    const inputs = form.querySelectorAll('.input, .input-phone');
+    inputs.forEach(input => {
+        input.addEventListener('input', function () {
+            removeError(this);
+        });
+        input.addEventListener('blur', function () {
+            if (!this.value.trim()) {
+                showError(this, 'This field is required.');
+            }
+        });
+    });
+}
+
+// Function to show error messages and set border color to red
+function showError(input, message) {
+    const parent = input.parentElement;
+    let error = parent.querySelector('.error-message');
+    
+    if (!error) {
+        error = document.createElement('div');
+        error.className = 'error-message text-danger';
+        parent.appendChild(error);
+    }
+
+    error.textContent = message;
+    input.classList.add('input-error');
+}
+
+// Function to remove error messages and reset border color
+function removeError(input) {
+    const parent = input.parentElement;
+    const error = parent.querySelector('.error-message');
+    if (error) {
+        parent.removeChild(error);
+    }
+    input.classList.remove('input-error');
+}
+
+// Call the setup functions when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    setupSignupValidation();
+    setupLoginValidation();
+    setupForgotPasswordValidation();
+});
+</script>
+<div class="footer-wrapper">
+    <div class="footer-container">
+        <p>© 2024 Designed & Developed by <b>B S Shreesha</b>, JIT, Bengaluru. Karnataka. India.</p>
+    </div>
+</div>  
+</body>
+</html>

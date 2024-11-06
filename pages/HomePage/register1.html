@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    /* Container Styles */
+    .container {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      width: 400px;
+      height: auto;
+    }
+
+    /* Header Styles */
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    /* Form Styles */
+    .input-container {
+      position: relative;
+      margin-bottom: 22px;
+    }
+
+    .input-container input {
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .input-container label {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      color: #999;
+      transition: 0.3s ease-in-out;
+      pointer-events: none;
+    }
+
+    .input-container input:focus ~ label,
+    .input-container input:not(:placeholder-shown) ~ label {
+      top: -10px;
+      left: 10px;
+      font-size: 14px;
+      color: #3498db;
+    }
+
+    /* Password Toggle Styles */
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #3498db;
+      font-size: 18px;
+    }
+
+    /* Button Styles */
+    button[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #2f7bbd;
+    }
+
+    /* Already have an account text */
+    .already-have-account {
+      font-size: 14px;
+      color: #666;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .already-have-account a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    .already-have-account a:hover {
+      color: #2f7bbd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Register</h1>
+    <form action="../../php/HomePage/register.php" method="POST">
+      <div class="input-container">
+        <input type="text" id="username" name="username" placeholder=" " required>
+        <label for="username">Username:</label>
+      </div>
+      <div class="input-container">
+        <input type="email" id="email" name="email" placeholder=" " required>
+        <label for="email">Email:</label>
+      </div>
+      <div class="input-container">
+        <input type="password" id="password" name="password" placeholder=" " required>
+        <label for="password">Password:</label>
+        <i class="fa-sharp fa-solid fa-eye-slash toggle-password" id="togglePassword"></i>
+      </div>
+      <div class="input-container">
+        <input type="password" id="confirm-password" name="confirm-password" placeholder=" " required>
+        <label for="confirm-password">Confirm Password:</label>
+        <i class="fa-sharp fa-solid fa-eye-slash toggle-password" id="toggleConfirmPassword"></i>
+      </div>
+      <button type="submit">Register</button>
+    </form>
+    <div class="already-have-account">
+      Already have an account? <a href="login1.html">Login</a>
+    </div>
+  </div>
+
+  <script>
+    const togglePassword = document.querySelector("#togglePassword");
+    const password = document.querySelector("#password");
+
+    togglePassword.addEventListener("click", function (e) {
+      const type = password.getAttribute("type") === "password" ? "text" : "password ";
+      password.setAttribute("type", type);
+
+      this.classList.toggle("fa-eye-slash");
+      this.classList.toggle("fa-eye");
+    });
+
+    const toggleConfirmPassword = document.querySelector("#toggleConfirmPassword");
+    const confirmPassword = document.querySelector("#confirm-password");
+
+    toggleConfirmPassword.addEventListener("click", function (e) {
+      const type = confirmPassword.getAttribute("type") === "password" ? "text" : "password";
+      confirmPassword.setAttribute("type", type);
+
+      this.classList.toggle("fa-eye-slash");
+      this.classList.toggle("fa-eye");
+    });
+  </script>
+</body>
+</html>
